@@ -172,17 +172,15 @@ public class Daoimple implements Dao
 		
 		
 		boolean b=false;
-		Product p1=new Product();
+
 		Date d=new Date();
 		java.sql.Date d1=new java.sql.Date(d.getYear(),d.getMonth(),d.getDate());
-		System.out.println(d1);
-		Session session=sf.openSession();
-        p1=(Product)session.get(Product.class,p.getPid());
-        p1.setTdate(d1.toString());
-        session.close();
+		p.setTdate(d1.toString());
+        
+        
         Session session1=sf.openSession();
         Transaction tx=session1.beginTransaction();
-         session1.save(p1);
+         session1.save(p);
          tx.commit();
 	     session1.close();
 		 return b;

@@ -310,7 +310,9 @@ public class ProductController extends HttpServlet
 		                     		p.setPinfo(item.getString());
 		                     	}
 		                     }
+		                    
 		                 }
+		                
 		                 
 		              b=obj.addProduct(p); 
 		              if(b)
