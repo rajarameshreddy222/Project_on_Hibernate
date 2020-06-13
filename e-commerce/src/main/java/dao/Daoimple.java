@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.transaction.Transactional.TxType;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -75,26 +77,18 @@ public class Daoimple implements Dao
                tx.commit();
        		   session.close();
         	}
-        	  
-        	  
-		
-		return b;
-	}
+      return b;
+	 }
 	
 	
 	public boolean login(User u)
 	{
 		boolean b=false;
-		
-	
-	
 		if(u.getUtype().equals("reqemplogin"))
 		{
 			 Session session=sf.openSession();
 			 u=(User)session.get(User.class, u.getEmail());
 			 session.close();
-			 
-		
 		}
 		else if(u.getUtype().equals("reqcuslogin"))
 		{
@@ -103,15 +97,10 @@ public class Daoimple implements Dao
 			 session.close();
 		}
 	
-	b=true;	
-		
-	
-		
-	
+	    b=true;	
 		return b;
 		
 	}
-	
 	
 	public boolean forgot(User u) 
 	{
@@ -149,7 +138,6 @@ public class Daoimple implements Dao
 	    return b;
 	 }
 	
-    
     public User cusviewbyid(User u) 
 	{
 		Session session=sf.openSession();
@@ -165,36 +153,51 @@ public class Daoimple implements Dao
 		session.close();
 	    return u;
 	}
+	
+	public boolean updateCus(User u)
+	{
+		boolean b=false;
+	    Session session=sf.openSession();
+		Transaction tx=session.beginTransaction();
+		session.update(u);
+		tx.commit();
+		session.close();
+		return b;
+	}
 
 
-	public boolean addProduct(Product p) {
+
+	public boolean addProduct(Product p) 
+	{
 		
 		
 		boolean b=false;
 		Product p1=new Product();
 		Date d=new Date();
 		java.sql.Date d1=new java.sql.Date(d.getYear(),d.getMonth(),d.getDate());
-	    Session session=sf.openSession();
+		System.out.println(d1);
+		Session session=sf.openSession();
         p1=(Product)session.get(Product.class,p.getPid());
-        p1.setTdate("d1");
+        p1.setTdate(d1.toString());
         session.close();
         Session session1=sf.openSession();
         Transaction tx=session1.beginTransaction();
-         session1.save(p);
+         session1.save(p1);
          tx.commit();
 	     session1.close();
 		 return b;
-	}
+	 }
 
 
-	public ArrayList<Product> viewallproduct(Product p) {
+/*	public ArrayList<Product> viewallproduct(Product p)
+	{
 		ArrayList<Product> al=new ArrayList<Product>();
 		ResultSet rs=null;
 	    con=Daoimple.getConnectionObject();
 		try {
 			
 			Statement stmt=con.createStatement();
-		rs=stmt.executeQuery("select pid,pname,pprice,filename,productinfo from stock1 ");
+		rs=stmt.executeQuery("select pid,pname,pprice,filename,productinfo from Product");
 			while(rs.next())
 			{
 				Product p1=new Product();
@@ -211,94 +214,41 @@ public class Daoimple implements Dao
 			System.out.println(e);
 		}
 		return al;
-	}
+	}*/
 
 
 	public ArrayList<Product> searchProduct(Product p) 
 	{
 		ArrayList<Product> al=new ArrayList<Product>();
 		Session session=sf.openSession();
-		al=(ArrayList<Product>)session.createQuery("select pid,pname,pprice,filename,pinfo from Product where pname like '%"+p.getPname().toLowerCase()+"%'  ").list();               
-		
-		
-		/////////////////////////////////////////////
-	/*	ResultSet rs=null;
-	    con=Daoimple.getConnectionObject();
-	    
-		try {
-			
-			Statement stmt=con.createStatement();
-			
-		rs=stmt.executeQuery("select pid,pname,pprice,filename,productinfo from stock1 where pname like '%"+p.getPname().toLowerCase()+"%'");
-	
-		while(rs.next())
-			{
-				Product p1=new Product();
-				p1.setPid(rs.getString(1));
-				p1.setPname(rs.getString(2));
-				p1.setPprice(rs.getDouble(3));
-				p1.setFilename(rs.getString(4));
-				p1.setPinfo(rs.getString(5));
-				al.add(p1);
-		    }
-		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-		}*/
+		al=(ArrayList<Product>)session.createQuery(" from Product where pname like '%"+p.getPname().toLowerCase()+"%'").list();               
+		session.close();
 		return al;
 	}
 	
 	public ArrayList<Product> searchProduct(Product p,String req) 
 	{
 		ArrayList<Product> al=new ArrayList<Product>();
-		ResultSet rs=null;
-	    con=Daoimple.getConnectionObject();
-		try {
-			
-			Statement stmt=con.createStatement();
+		
 		   if(req.equals("lh"))
-		   {
-			rs=stmt.executeQuery("select pid,pname,pprice,filename,productinfo from stock1 where pname like '%"+p.getPname().toLowerCase()+"%' order by pprice asc");
+		   {Session session=sf.openSession();
+			   al=(ArrayList<Product>)session.createQuery("from Product where pname like '%"+p.getPname().toLowerCase()+"%' order by pprice asc").list();
 		   }
 		   else if(req.equals("hl"))
-		   {
-			   rs=stmt.executeQuery("select pid,pname,pprice,filename,productinfo from stock1 where pname like '%"+p.getPname().toLowerCase()+"%' order by pprice desc");
+		   {Session session=sf.openSession();
+			   al=(ArrayList<Product>)session.createQuery("from Product where pname like '%"+p.getPname().toLowerCase()+"%' order by pprice desc").list();
 		   }
-			while(rs.next())
-			{
-				Product p1=new Product();
-				p1.setPid(rs.getString(1));
-				p1.setPname(rs.getString(2));
-				p1.setPprice(rs.getDouble(3));
-				p1.setFilename(rs.getString(4));
-				p1.setPinfo(rs.getString(5));
-				al.add(p1);
-				
-				
-			}
-		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-		}
+			
 		return al;
 		
 	}
 
-	
-	
-	
-
-
-
-	
-	
 	public Product productInfoByPid(Product p)
 	{
 		Session session=sf.openSession();
 		p=(Product)session.get(Product.class,p.getPid());
-		ResultSet rs=null;;
+		session.close();
+		
        return p;
 	}
 
@@ -408,27 +358,7 @@ public class Daoimple implements Dao
 	
 	
 
-	public boolean updateCus(User u) {
-		boolean b=false;
-		con=getConnectionObject();
-		try {
-			Statement ps=con.createStatement();
-			int i=ps.executeUpdate("update cus1 set NAME='"+u.getName()+"' ,PWD='"+u.getPwd()+"' ,MOBILE='"+u.getMobile()+"' ,CITY='"+u.getCity()+"'  	FNAME='"+u.getFname()+"' where email='"+u.getEmail()+"'  ");
-		if(i>0)
-		{
-			b=true;
-		}
-		
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-		}
 	
-		
-		
-		return b;
-	}
-
 
 	public boolean addproducttocart1(Product p, String name)
 	{

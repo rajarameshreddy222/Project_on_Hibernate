@@ -110,7 +110,7 @@ public class UserController extends HttpServlet
 			   File arr[]=f.listFiles();
 			
 			   req.setAttribute("filenames",arr);
-			   RequestDispatcher rd=req.getRequestDispatcher("empviewbyid.jsp");
+			   RequestDispatcher rd=req.getRequestDispatcher("cusviewbyid.jsp");
 				rd.forward(req, res);
 	   
 		}

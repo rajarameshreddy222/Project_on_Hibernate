@@ -300,10 +300,7 @@ public class ProductController extends HttpServlet
 		                     	{
 		                     		p.setPqty(Integer.parseInt(item.getString()));
 		                     	}
-		                    	else if(item.getFieldName().equals("tdate"))
-		                     	{
-		                     		p.setTdate(item.getString());
-		                     	}
+		                    	
 		                    	else if(item.getFieldName().equals("ctype"))
 		                     	{
 		                     		p.setCtype(item.getString());

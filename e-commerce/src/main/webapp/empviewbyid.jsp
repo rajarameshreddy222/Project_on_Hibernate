@@ -27,7 +27,7 @@ for(File f:arr)
 	
 if(u.getFname().equals(f.getName()))
 {
- out.print(" <center> <br><br><table border=1 cellpadding=10  bgcolor=white>");
+ out.print(" <br> <center> <br><br><table border=0 cellpadding=10  bgcolor=white>");
   
 out.print("<tr><td rowspan=7 ><center><img src='"+f+"' height=200 width=200> </td>");
 

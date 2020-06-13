@@ -17,6 +17,6 @@ public class Orders
 		this.sumoftotal = sumoftotal;
 	}
 	
-	
+	///FILENAME  	OID  	PID  	PNAME  	PPRICE  	PQTY  	TPRICE  	CNAME  	ODATE  	DDATE  
 
 }
